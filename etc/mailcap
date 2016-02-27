@@ -1,0 +1,72 @@
+###############################################################################
+#
+#  MIME types and programs that process those types
+#
+#  Much of this file is generated automatically by the program "update-mime".
+#  Please see the "update-mime" man page for more information.
+#
+#  Users can add their own rules if they wish by creating a ".mailcap"
+#  file in their home directory.  Entries included there will take
+#  precedence over those listed here.
+#
+###############################################################################
+
+
+###############################################################################
+#
+#  User section follows:  Any entries included in this section will take
+#  precedence over those created by "update-mime".  DO NOT CHANGE the
+#  "User Section Begins" and "User Section Ends" lines, or anything outside
+#  of this section!
+#
+
+# ----- User Section Begins ----- #
+# -----  User Section Ends  ----- #
+
+###############################################################################
+
+text/html; /usr/bin/sensible-browser '%s'; description=HTML Text; nametemplate=%s.html
+image/avs; gm display 'avs:%s'; test=test -n "$DISPLAY"
+image/bie; gm display 'bie:%s'; test=test -n "$DISPLAY"
+image/x-ms-bmp; gm display 'bmp:%s'; test=test -n "$DISPLAY"
+image/dcx; gm display 'dcx:%s'; test=test -n "$DISPLAY"
+image/eps; gm display 'eps:%s'; test=test -n "$DISPLAY"
+image/fax; gm display 'fax:%s'; test=test -n "$DISPLAY"
+image/fits; gm display 'fits:%s'; test=test -n "$DISPLAY"
+image/gif; gm display 'gif:%s'; test=test -n "$DISPLAY"
+image/hdf; gm display 'hdf:%s'; test=test -n "$DISPLAY"
+image/jpeg; gm display 'jpeg:%s'; test=test -n "$DISPLAY"
+image/miff; gm display 'miff:%s'; test=test -n "$DISPLAY"
+image/mtv; gm display 'mtv:%s'; test=test -n "$DISPLAY"
+image/x-portable-bitmap; gm display 'pbm:%s'; test=test -n "$DISPLAY"
+image/pcd; gm display 'pcd:%s'; test=test -n "$DISPLAY"
+image/pcx; gm display 'pcx:%s'; test=test -n "$DISPLAY"
+image/pdf; gm display 'pdf:%s'; test=test -n "$DISPLAY"
+image/x-portable-graymap; gm display 'pgm:%s'; test=test -n "$DISPLAY"
+image/pict; gm display 'pict:%s'; test=test -n "$DISPLAY"
+image/png; gm display 'png:%s'; test=test -n "$DISPLAY"
+image/x-portable-anymap; gm display 'pnm:%s'; test=test -n "$DISPLAY"
+image/x-portable-pixmap; gm display 'ppm:%s'; test=test -n "$DISPLAY"
+image/ps; gm display 'ps:%s'; test=test -n "$DISPLAY"
+image/rad; gm display 'rad:%s'; test=test -n "$DISPLAY"
+image/rla; gm display 'rla:%s'; test=test -n "$DISPLAY"
+image/rle; gm display 'rle:%s'; test=test -n "$DISPLAY"
+image/sgi; gm display 'sgi:%s'; test=test -n "$DISPLAY"
+image/sun-raster; gm display 'sun:%s'; test=test -n "$DISPLAY"
+image/targa; gm display 'tga:%s'; test=test -n "$DISPLAY"
+image/tiff; gm display 'tiff:%s'; test=test -n "$DISPLAY"
+image/vid; gm display 'vid:%s'; test=test -n "$DISPLAY"
+image/viff; gm display 'viff:%s'; test=test -n "$DISPLAY"
+image/x-xbitmap; gm display 'xbm:%s'; test=test -n "$DISPLAY"
+image/x-xpixmap; gm display 'xpm:%s'; test=test -n "$DISPLAY"
+image/x-xwindowdump; gm display 'xwd:%s'; test=test -n "$DISPLAY"
+application/x-tar; /bin/tar tvf -; print=/bin/tar tvf - | print text/plain:-; copiousoutput
+application/x-gtar; /bin/tar tvzf -; print=/bin/tar tvzf - | print text/plain:-; copiousoutput
+application/zip; unzip -l '%s'; nametemplate=%s.zip; copiousoutput
+text/plain; more '%s'; needsterminal
+text/plain; view '%s'; edit=vim '%s'; compose=vim '%s'; test=test -x /usr/bin/vim; needsterminal
+text/plain; view '%s'; edit=vi '%s'; compose=vi '%s'; needsterminal
+text/*; view '%s'; edit=vim '%s'; compose=vim '%s'; test=test -x /usr/bin/vim; needsterminal
+text/*; more '%s'; needsterminal
+text/*; view '%s'; edit=vi '%s'; compose=vi '%s'; needsterminal
+application/x-debian-package; /usr/lib/mime/debian-view '%s'; needsterminal; description=Debian GNU/Linux Package; nametemplate=%s.deb

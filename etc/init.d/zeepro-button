@@ -1,0 +1,56 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          zeepro-button
+# Required-Start:    $zeepro-network
+# Required-Stop:
+# Should-Start:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Zeepro Button service
+### END INIT INFO
+
+PATH="/sbin:/bin:/usr/sbin"
+
+
+
+RETVAL=0
+
+start() {
+        echo -n "Starting Zeepro Button services: "
+        zeepro-buttond &
+        RETVAL=$?
+        echo "done"
+
+        return $RETVAL
+}
+
+stop() {
+        echo -n "Shutting down Zeepro Button services: "
+        kill -9 `pidof zeepro-buttond`
+        RETVAL=$?
+
+        echo "done"
+        return $RETVAL
+}
+
+restart() {
+        stop
+        start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|reload}"
+        exit 1
+esac
+
+exit $?

@@ -1,0 +1,60 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          zeepro-fixmac
+# Required-Start:    $local_fs
+# Required-Stop:
+# Should-Start:
+# X-Start-Before:    $zeepro-network
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Fix random mac
+# Description:       generate a mac address to be used every time
+#
+### END INIT INFO
+
+ZEEPRO_EMAC_FILE=/config/default/macaddr
+ZEEPRO_FAB_FILE=/fab/macaddr.txt
+
+setEmac(){
+if [ ! -f $ZEEPRO_FAB_FILE ]
+then
+  if [ ! -f $ZEEPRO_EMAC_FILE ]
+  then
+  rand=`dd if=/dev/urandom bs=1 count=4 | hexdump -n4 -e '/1 ":%02x"' `
+
+  randemac="c0:b0$rand"
+
+  echo "generate mac address to $ZEEPRO_EMAC_FILE"
+cat > $ZEEPRO_EMAC_FILE <<END
+$randemac
+END
+  EMAC="$randemac"
+  else
+  EMAC=$(cat $ZEEPRO_EMAC_FILE)
+  fi
+else
+ EMAC=$(cat $ZEEPRO_FAB_FILE)
+ # shortMac=$(cat $ZEEPRO_FAB_FILE)
+ # EMAC=`echo $shortMac | cut -c1-2`:`echo $shortMac | cut -c3-4`:`echo $shortMac | cut -c5-6`:`echo $shortMac | cut -c7-8`:`echo $shortMac | cut -c9-10`:`echo $shortMac | cut -c11-12`
+fi
+}
+
+case "$1" in
+  start)
+                        setEmac
+                        set +e
+                        echo "set mac address $EMAC on eth0"
+                        /sbin/ifconfig eth0 hw ether $EMAC
+                        if [ "$?" != "0" ];then
+                                echo "$N error: invalid mac address format? checck file $ZEEPRO_EMAC_FILE"
+                        fi
+        ;;
+  *)
+        echo "Usage: $N {start}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
+
+

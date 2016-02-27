@@ -1,0 +1,48 @@
+#!/bin/sh
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+#export LD_LIBRARY_PATH=/usr/local/mjpg-streamer/
+
+RETVAL=0
+
+start() {
+        echo -n "Starting MJPEG STREAMER"
+        cd /usr/local/mjpg_streamer
+        mjpg_streamer -i "./input_uvc.so -y" -o "./output_http.so" &
+        RETVAL=$?
+        cd -
+        echo "done"
+
+        return $RETVAL
+}
+
+stop() {
+        echo -n "Shutting down MJPEG STREAMER "
+        kill -2 `pidof mjpg_streamer`
+        RETVAL=$?
+        echo "done"
+        return $RETVAL
+}
+
+restart() {
+        stop
+        start
+}
+
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

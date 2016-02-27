@@ -1,0 +1,9 @@
+/logs/upgrade {
+	su root root
+	size 20M
+	create 777 root root
+	rotate 4
+	compress
+	copytruncate
+	missingok
+}

@@ -1,0 +1,44 @@
+#! /bin/sh
+#
+
+. /lib/lsb/init-functions
+
+check_dev_null() {
+    if [ ! -c /dev/null ]; then
+        if [ "$1" = log_end_msg ]; then
+            log_end_msg 1 || true
+        fi
+        if ! run_by_init; then
+            log_action_msg "/dev/null is not a character device!" || true
+        fi
+        exit 1
+    fi
+}
+
+case "$1" in
+  start)
+        check_dev_null
+        log_daemon_msg "Starting Zeepro Config Daemon" || true
+        if start-stop-daemon --start --quiet --name zeepro-confd.sh --exec /usr/bin/zeepro-confd.sh &
+        then
+            log_end_msg 0 || true
+        else
+            log_end_msg 1 || true
+        fi
+    ;;
+  stop)
+        log_daemon_msg "Stopping Zeepro Config Daemon" || true
+        if start-stop-daemon --stop --quiet --oknodo --name zeepro-confd.sh
+        then
+            log_end_msg 0 || true
+        else
+            log_end_msg 1 || true
+        fi
+        ;;
+  *)
+    echo "Usage: /etc/init.d/zeepro-confd {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

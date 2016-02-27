@@ -1,0 +1,33 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          bootstrap
+# Required-Start:    
+# Required-Stop:
+# Should-Start:      $all
+# Default-Start: 2 3 4 5    
+# Default-Stop:
+# Short-Description: Bootstrap routines
+# Description: first system up
+### END INIT INFO
+
+N=/etc/init.d/zeepro-bootstrap
+ST_FLAG=/config/.bootstrap
+
+set -e
+
+[ -f $ST_FLAG ] && exit 0
+
+case "$1" in
+  start)
+	mkfs.ext4 /dev/mmcblk0p1 && touch $ST_FLAG
+	;;
+  status)
+	;;
+  *)
+	echo "Usage: $N {start|status}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

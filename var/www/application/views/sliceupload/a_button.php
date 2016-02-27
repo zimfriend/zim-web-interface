@@ -1,0 +1,1 @@
+<a href="{link}" id="{id}" data-icon="arrow-r" data-role="button" data-iconpos="right" data-ajax="false">{text}</a>

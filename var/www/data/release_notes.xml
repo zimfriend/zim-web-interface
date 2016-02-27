@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+
+<upgrade>
+	<version>1.8.2</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>New Models added</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Nouveaux modèles</note>
+	</part>
+</upgrade>
+<upgrade>
+	<version>1.8</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>Extruder multiplier support</note>
+		<note>Interface pattern spacing now supports decimal values</note>
+		<note>Bug fix: rendering direction</note>
+	</part>
+	<part lang="en">
+		<title>Firmware</title>
+		<note>Extruder multiplier support</note>
+	</part>
+	<part lang="en">
+		<title>System</title>
+		<note>3DSlash model import</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Gestion du coefficient d'extrusion</note>
+		<note>L'espacement intermédiaire des supports accepte les valeur décimales</note>
+		<note>Correction: orientation de la pré-visualisation</note>
+	</part>
+	<part lang="fr">
+		<title>Firmware</title>
+		<note>Gestion du coefficient d'extrusion</note>
+	</part>
+	<part lang="fr">
+		<title>Système</title>
+		<note>Importation en provenance de 3DSlash</note>
+	</part>
+</upgrade>
+<upgrade>
+	<version>1.7</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>Improved 3D visualization of models before printing</note>
+		<note>Real-time model adjustment when scaling or rotating</note>
+		<note>New Models added</note>
+	</part>
+	<part lang="en">
+		<title>Firmware</title>
+		<note>Single extruder management</note>
+	</part>
+	<part lang="en">
+		<title>System</title>
+		<note>RTL8188CU WiFi support</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Amélioration de la visualisation des modèles en 3D avant l'impression</note>
+		<note>Rotation et dimensionnement des modèles en temps-réel</note>
+		<note>Nouveaux modèles</note>
+	</part>
+	<part lang="fr">
+		<title>Firmware</title>
+		<note>Gestion des imprimantes mono-extrudeur</note>
+	</part>
+	<part lang="fr">
+		<title>Système</title>
+		<note>Support des clefs WiFi RTL8188CU</note>
+	</part>
+</upgrade>
+<upgrade>
+	<version>1.6</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>New page for advanced users (G-code uploading)</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Nouvelle page pour les utilisateurs avancés (chargement du G-code)</note>
+	</part>
+</upgrade>
+<upgrade>
+	<version>1.5</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>Slice models much faster thanks to the new Cloud Slicing feature. Check it now!</note>
+		<note>Enjoy new creative models from Zeepro like the Golden Gate Bridge</note>
+	</part>
+	<part lang="en">
+		<title>Firmware</title>
+		<note>Improved power button management</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Slicer vos modèles beaucoup rapidement grâce au nouveau slicing dans le cloud !</note>
+		<note>Nouveaux modèles Zeepro</note>
+	</part>
+	<part lang="fr">
+		<title>Firmware</title>
+		<note>Amélioration de la gestion du bouton d'allumage</note>
+	</part>
+</upgrade>
+<upgrade>
+	<version>1.4.1</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>New Zeepro models</note>
+		<note>Add print again button on cancel page</note>
+		<note>Add return to slicer result page link</note>
+		<note>Improve slicer model setting page and logo style</note>
+	</part>
+	<part lang="en">
+		<title>API</title>
+		<note>Fix bug in pre-sliced model print call</note>
+		<note>Improve performance and internal structures</note>
+	</part>
+	<part lang="en">
+		<title>Firmware</title>
+		<note>Partial source code clean in main loop, and reduce binary file size</note>
+		<note>Fix serial port communication logical issue</note>
+		<note>Enhance loading and priming support for PVA</note>
+	</part>
+	<part lang="en">
+		<title>System</title>
+		<note>Pre ending script support to screen platform lowing in slower speed in time-lapse</note>
+		<note>Disable HLS video file cache to improve IE support</note>
+		<note>Clean up some unused files</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Nouveaux modèles Zeepro</note>
+		<note>Ajout d'un bouton sur la page d'annulation pour relancer l'impression</note>
+		<note>Ajout d'un bouton pour revenir à la page de fin de slicing</note>
+		<note>Amélioration de la page de paramétrage des modèles avant le slicing</note>
+	</part>
+	<part lang="fr">
+		<title>API</title>
+		<note>Correction d'une erreur d'impression des modèles pré-slicés</note>
+		<note>Amélioration des performances et des structures internes</note>
+	</part>
+	<part lang="fr">
+		<title>Firmware</title>
+		<note>Amélioration du code source et réduction de la taille du binaire</note>
+		<note>Correction d'une erreur de communication sur le port série</note>
+		<note>Amélioration du chargement et de l'amorçage du PVA</note>
+	</part>
+	<part lang="fr">
+		<title>Système</title>
+		<note>Création d'un script de pré-finalisation pour filmer la descente du plateau dans les zim-motions</note>
+		<note>Désactivation du cache des fichiers HLS pour améliorer la compatibilité avec IE</note>
+		<note>Suppression de fichiers inutiles</note>
+	</part>
+</upgrade>
+<upgrade>
+	<version>1.4</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>Store your models and their associated print settings in "My libraries"</note>
+		<note>Share now your zim-motion videos on Facebook!</note>
+		<note>Analyze and view the generated G-code, right after slicing</note>
+		<note>Improve model preparation before printing (rotation and scaling)</note>
+	</part>
+	<part lang="en">
+		<title>API</title>
+		<note>Improve and fix HLS video cancelling issues</note>
+		<note>Fix PVA unloading speed</note>
+	</part>
+	<part lang="en">
+		<title>Firmware</title>
+		<note>Improve print fan management after print cancellation</note>
+		<note>Improve retraction compensation speed for PVA</note>
+	</part>
+	<part lang="en">
+		<title>System</title>
+		<note>Post heating script support to start zim-motion after nozzles heating</note>
+		<note>Activate HTTP compression to speed up communication</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Sauvegarde des modèles et de leur configurations dans " Ma bibliothèque "</note>
+		<note>Partage des zim-motions sur FaceBook !</note>
+		<note>Analyse et consultation des G-code générés après slicing</note>
+		<note>Amélioration du paramétrage des modèle avant slicing (taille et rotation)</note>
+	</part>
+	<part lang="fr">
+		<title>API</title>
+		<note>Amélioration de la gestion de la vidéo en cas d'annulation</note>
+		<note>Correction de la vitesse de rembobinage du PVA</note>
+	</part>
+	<part lang="fr">
+		<title>Firmware</title>
+		<note>Amélioration de la gestion de la ventilation en cas d'annulation</note>
+		<note>Amélioration de la vitesse de compensation de rétraction du PVA</note>
+	</part>
+	<part lang="fr">
+		<title>Système</title>
+		<note>Création d'un script après-chauffage pour démarrer les zim-motions après le chauffage des buses</note>
+		<note>Activation de la compression HTTP pour accélérer la communication</note>
+	</part>
+</upgrade>
+
+</root>

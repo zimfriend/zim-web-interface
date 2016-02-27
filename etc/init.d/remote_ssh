@@ -1,0 +1,80 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          zeepro_remote
+# Required-Start:    $zeepro_network
+# Required-Stop:
+# Should-Start:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Zeepro remote Agent
+### END INIT INFO
+
+
+###
+#case start
+
+#start) script in bkg
+#status) read from /tmp/remoteSSH and get port
+#stop) killall script
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+SSHPIDFILE="/tmp/ssh.pid"
+
+RETVAL=0
+tmpFile="/tmp/remoteSSH"
+
+start() {
+        echo -n "Starting SSH Remote Agent"
+        [ -f $tmpFile ] && echo "done" && return $RETVAL
+        echo "" > $tmpFile
+        
+        remoteSSH.sh >/dev/null 2>&1 &
+        RETVAL=$?
+        echo "done"
+
+        return $RETVAL
+}
+
+stop() {
+        echo -n "Shutting down SSH Remote Agent"
+        killall remoteSSH.sh
+        start-stop-daemon --name ngrok --pidfile $SSHPIDFILE --stop RETVAL=$?
+		#echo "" > $tmpFile
+		rm -f $tmpFile
+        echo "done"
+        return $RETVAL
+}
+
+restart() {
+        stop
+        start
+}
+
+
+case "$1" in
+  stop)
+        stop
+        ;;
+  start)
+        start
+        ;;
+  status)
+        #status
+ 	port="N/A"	
+	[ -f $tmpFile ] && port=`cat $tmpFile | grep "Tunnel established" | cut -d '/' -f5`
+	if [ "$port" = "N/A" ] 
+	then
+		echo "OFF"
+	elif [ "$port" = "" ]
+	then
+		echo "ON []"
+	else
+		echo "ON [$port]"
+	fi
+        ;;
+  *)
+        
+        ;;
+esac
+
+exit $?

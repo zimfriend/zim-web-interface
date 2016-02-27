@@ -1,0 +1,11 @@
+TARGETS = dbus arcontrol ifplugd dnsmasq lighttpd fw-upgrade zeepro-confd killprocs motd bootlogs sudo ssh upgrade avahi-daemon isc-dhcp-server exim4 single cron rc.local rmnologin zeepro-cpufreq zeepro-bootstrap
+INTERACTIVE =
+avahi-daemon: dbus
+isc-dhcp-server: dnsmasq
+exim4: dnsmasq
+single: killprocs motd bootlogs
+cron: dnsmasq
+rc.local: avahi-daemon dbus arcontrol ifplugd isc-dhcp-server dnsmasq exim4 lighttpd fw-upgrade zeepro-confd motd bootlogs sudo cron ssh upgrade
+rmnologin: sudo avahi-daemon dbus arcontrol ifplugd isc-dhcp-server dnsmasq exim4 lighttpd fw-upgrade zeepro-confd motd bootlogs cron ssh upgrade
+zeepro-cpufreq: avahi-daemon dbus arcontrol ifplugd isc-dhcp-server dnsmasq exim4 lighttpd fw-upgrade zeepro-confd motd bootlogs sudo cron ssh upgrade
+zeepro-bootstrap: avahi-daemon dbus arcontrol ifplugd isc-dhcp-server dnsmasq exim4 lighttpd fw-upgrade zeepro-confd motd bootlogs sudo cron ssh upgrade

@@ -1,0 +1,52 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          zeepro_remote
+# Required-Start:    $zeepro_network
+# Required-Stop:
+# Should-Start:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Zeepro remote Agent
+### END INIT INFO
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+configFile="/config/local/agentStartup"
+RDVPIDFILE="/tmp/rdv.pid"
+
+RETVAL=0
+
+start() {
+	[ -f $configFile ] && echo "Remote Agent disable" && return 0
+        echo -n "Starting Remote Agent"
+        
+        remoteAgent.sh $* >/dev/null 2>&1 &
+        RETVAL=$?
+        echo "done"
+
+        return $RETVAL
+}
+
+stop() {
+        echo -n "Shutting down Remote Agent "
+        killall remoteAgent.sh
+        start-stop-daemon --name ngrok --pidfile $RDVPIDFILE --stop RETVAL=$?
+        echo "done"
+        return $RETVAL
+}
+
+restart() {
+        stop
+        start
+}
+
+
+case "$1" in
+  stop)
+        stop
+        ;;
+  *)
+        start $*
+        ;;
+esac
+
+exit $?

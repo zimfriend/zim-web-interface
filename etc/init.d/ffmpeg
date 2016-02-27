@@ -1,0 +1,62 @@
+#!/bin/sh
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+
+RETVAL=0
+
+start() {
+        echo -n "Starting FFMPEG "
+        
+        # delete old video files
+        rm -f /var/www/tmp/*.ts
+        rm -f /var/www/tmp/*.m3u8
+        clean_tl
+        
+        ffmpeg $* >/dev/null 2>&1 &
+        RETVAL=$?
+        echo "done"
+
+        return $RETVAL
+}
+
+clean_tl() {
+        echo -n "Cleaning Timelapse images"
+        
+        # delete old video files
+        rm -f /var/www/tmp/timelapse/img*.jpg
+        rm -f /var/www/tmp/timelapse/fin*.jpg
+        RETVAL=$?
+        echo "done"
+
+        return $RETVAL
+}
+
+stop() {
+        echo -n "Shutting down FFMPEG "
+	pid=`pidof ffmpeg`
+	[ "$pid" = "" ] && return $RETVAL
+        kill -2 $pid
+        RETVAL=$?
+        echo "done"
+        return $RETVAL
+}
+
+restart() {
+        stop
+        start
+}
+
+
+case "$1" in
+  stop)
+        stop
+        ;;
+  clean_tl)
+        clean_tl
+        ;;
+  *)
+        start $*
+        ;;
+esac
+
+exit $?

@@ -1,0 +1,76 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          slic3r
+# Required-Start:    $network
+# Required-Stop:
+# Should-Start:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Zeepro slic3r service
+### END INIT INFO
+
+PATH="/usr/bin:/sbin:/bin:/usr/sbin"
+
+SLICER_CONFIG_SDPATH=/sdcard/conf/config.ini
+SLICER_CONFIG_NANDPATH=/config/conf/config.ini
+SLICER_CONFIG_DEFAULT=/usr/lib/zeepro-slic3r/config_zim.ini
+SLICER_PORT_FILE=/tmp/Slic3rPort.txt
+
+RETVAL=0
+
+launch_slic3r() {
+	launch_prm=" --load $SLICER_CONFIG_DEFAULT "
+	if [ -f $SLICER_CONFIG_SDPATH ]
+	then
+		launch_prm=" --load $SLICER_CONFIG_SDPATH "
+	elif [ -f $SLICER_CONFIG_NANDPATH ]
+	then
+		launch_prm=" --load $SLICER_CONFIG_NANDPATH "
+	fi
+
+	cd /usr/lib/zeepro-slic3r
+	./slic3r.bin --httpdaemon $launch_prm >> /var/log/slic3r 2>&1 &
+	
+	return $RETVAL
+}
+
+start() {
+        echo -n "Starting Zeepro Slic3r services: "
+	export DISPLAY=":0.0"
+	export XAUTHORITY="/tmp/xauth"
+        startx &
+        launch_slic3r
+        echo "done"
+
+        return $RETVAL
+}
+
+stop() {
+        echo -n "Shutting down Zeepro Slic3r services: "
+
+        echo "done"
+}
+
+restart() {
+        export DISPLAY=":0.0"
+        export XAUTHORITY="/tmp/xauth"
+        [ "" != `cat SLICER_PORT_FILE` ] && fuser -k `cat SLICER_PORT_FILE`/tcp
+        launch_slic3r
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

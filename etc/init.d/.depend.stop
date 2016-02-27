@@ -1,0 +1,8 @@
+TARGETS = arcontrol ifplugd lighttpd fw-upgrade zeepro-confd upgrade isc-dhcp-server exim4 hwclock.sh urandom dnsmasq avahi-daemon sendsigs umountnfs.sh umountfs umountroot halt reboot
+dnsmasq: exim4
+sendsigs: avahi-daemon arcontrol ifplugd isc-dhcp-server exim4 lighttpd fw-upgrade dnsmasq zeepro-confd upgrade
+umountnfs.sh: avahi-daemon arcontrol ifplugd isc-dhcp-server exim4 lighttpd sendsigs fw-upgrade dnsmasq zeepro-confd upgrade
+umountfs: avahi-daemon arcontrol umountnfs.sh ifplugd isc-dhcp-server hwclock.sh urandom exim4 lighttpd fw-upgrade dnsmasq zeepro-confd upgrade
+umountroot: umountfs
+halt: umountroot
+reboot: umountroot

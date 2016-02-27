@@ -1,0 +1,183 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          zeepro_network
+# Required-Start:    $local_fs
+# Required-Stop:
+# Should-Start:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Zeepro network manager
+### END INIT INFO
+
+PATH="/sbin:/bin:/usr/sbin"
+
+ZEEPRO_CONF_DEFAULT=/config/default
+ZEEPRO_CONF_LOCAL=/config/local
+
+ZEEPRO_NET_DIR=/config/local/net/
+ZEEPRO_NET_MODE_FILE=$ZEEPRO_NET_DIR/net_mode
+ZEEPRO_NET_HOSTAPD_FILE=$ZEEPRO_NET_DIR/hostapd.conf
+ZEEPRO_NET_WPASUPP_FILE=$ZEEPRO_NET_DIR/wpa_supplicant.conf
+ZEEPRO_NET_BOOTSTRAP_FILE=/config/local/net/bootstrap
+ZEEPRO_NET_DEFAULT_HOSTNAME="zim"
+
+. /lib/lsb/init-functions
+
+NETCONF_LOG_FILE=/logs/netconf
+
+echo_debug() {
+        dt=`date +"%x %X"`
+        echo "[$dt][Network] $*" >> $NETCONF_LOG_FILE
+}
+
+check_config_dir(){
+    if [ ! -d $ZEEPRO_CONF_LOCAL ]
+    then
+        cp -rv $ZEEPRO_CONF_DEFAULT $ZEEPRO_CONF_LOCAL
+    fi
+}
+
+do_wlanc_start(){
+          WPA_SUPP_ARGS=" -B -iwlan0 -c$ZEEPRO_NET_WPASUPP_FILE -Dwext"
+          if start-stop-daemon --start --name wpa_supplicant --exec /sbin/wpa_supplicant --quiet --$WPA_SUPP_ARGS &&
+	  ifconfig lo up
+          dhclient wlan0 &
+          then
+             log_end_msg 0 || true
+          else
+              log_end_msg 1 || true
+          fi
+}
+
+do_wlans_start(){
+          HOSTAPD_ARGS=" -B $ZEEPRO_NET_HOSTAPD_FILE"
+          if start-stop-daemon --start --name hostapd --exec /usr/sbin/hostapd --quiet --$HOSTAPD_ARGS
+          then
+             log_end_msg 0 || true
+          else
+              log_end_msg 1 || true
+          fi
+
+	  ifconfig wlan0 "10.0.0.1"
+          ifconfig lo up
+          touch /tmp/dhcpd.leases
+          /etc/init.d/isc-dhcp-server start
+          /etc/init.d/netbios restart
+}
+
+do_start(){
+
+	check_config_dir
+
+	#get hostname
+	#write /etc/hosts
+	hostname=`cat /etc/hostname`
+cat << END > /etc/hosts
+127.0.0.1       localhost
+10.0.0.1	$hostname.local
+10.0.0.1	$hostname
+::1             localhost ip6-localhost ip6-loopback
+fe00::0         ip6-localnet
+ff00::0         ip6-mcastprefix
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+END
+
+        if [ -f $ZEEPRO_NET_MODE_FILE ] 
+        then
+          netConfMode=`cat $ZEEPRO_NET_MODE_FILE`
+        else
+          log_end_msg 0 || true
+        fi
+
+        case "$netConfMode" in
+        pEth)
+	  echo_debug "start mode pEth"
+          log_end_msg 0 || true
+          ;;
+
+        cEth)
+	    echo_debug "start mode cEth"
+            log_end_msg 0 || true
+          ;;
+
+        sWifi)
+	   echo_debug "start mode sWifi"
+	  #if bootstrap, netconf default, put macaddress
+	  [ -f $ZEEPRO_NET_BOOTSTRAP_FILE ] || zeepro-netconf -n $ZEEPRO_NET_DEFAULT_HOSTNAME default
+	   do_wlans_start
+          ;;
+
+        cWifi)
+	   echo_debug "start mode cWifi"
+	   do_wlanc_start
+	   zeepro-netcheck &
+          ;;
+
+        default)
+	  do_wlans_start
+	  
+          ;;
+        *)
+          ;;
+        esac
+
+	ntpdate-debian &
+}
+
+do_wlan_stop(){
+        start-stop-daemon --stop --quiet --oknodo --name wpa_supplicant
+        start-stop-daemon --stop --quiet --oknodo --name hostapd
+	/etc/init.d/isc-dhcp-server stop
+	ifconfig wlan0 down
+	ip addr flush dev wlan0
+}
+
+do_stop(){
+  	do_wlan_stop
+}
+
+do_restart(){
+        if [ -f $ZEEPRO_NET_MODE_FILE ]
+        then
+          netConfMode=`cat $ZEEPRO_NET_MODE_FILE`
+        else
+          log_end_msg 0 || true
+        fi
+	
+	if [ "$netConfMode" = "pEth" -o "$netConfMode" = "cEth" ] 
+	then
+	  ip addr flush dev eth0
+	  /etc/init.d/networking restart
+	fi
+	do_stop
+	do_start
+
+}
+
+case "$1" in
+  start)
+        log_daemon_msg "Starting Zeepro Network" || true
+ 	do_start
+	[ -f $ZEEPRO_NET_BOOTSTRAP_FILE ] || touch $ZEEPRO_NET_BOOTSTRAP_FILE         
+    ;;
+  stop)
+        log_daemon_msg "Stopping Zeepro Network" || true
+	#we need at least one interface 
+	do_stop
+        log_end_msg 0 || true
+    ;;
+  restart)
+    do_restart
+    ;;
+  delayed-restart)
+    sleep 5
+    do_restart
+    ;;
+  *)
+    echo "Usage: /etc/init.d/zeepro-network {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

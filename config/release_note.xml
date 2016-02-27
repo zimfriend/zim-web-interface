@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<upgrade>
+	<version>1.8.2</version>
+	<part lang="en">
+		<title>Zim interface</title>
+		<note>New Models added</note>
+	</part>
+	<part lang="fr">
+		<title>Interface Zim</title>
+		<note>Nouveaux modèles</note>
+	</part>
+</upgrade>

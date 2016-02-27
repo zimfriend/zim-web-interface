@@ -1,0 +1,6 @@
+/logs/fw-upgrade {
+	su root root
+	size 5M
+	create 777 root root
+	rotate 4
+}

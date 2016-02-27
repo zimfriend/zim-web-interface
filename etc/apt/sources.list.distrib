@@ -1,0 +1,2 @@
+deb http://192.168.1.18/repo/ftp.fr.debian.org/debian/ wheezy main contrib non-free
+deb http://127.0.0.1/repo/zalpha.repo/ ./
